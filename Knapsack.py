@@ -39,5 +39,9 @@ class Knapsack:
     def clear(self):
         self.content.clear()
     
+    def removeItem(self, item):
+        self.content.remove(item)
+        return item
+
     def __repr__(self):
-        return "My maxWeight is " + str(self.maxWeight) + "\nI have "+ str(self.Capacity)+" Space left \nI hold the following items:\n" + str(self.content) +"\n my total value is " + str(self.getTotalValue()) + "\n"
+        return "My maxWeight is: " + str(self.maxWeight) + ", I have "+ str(self.Capacity)+" Space left ,I hold the following items: " + str(self.content) +", my total value is: " + str(self.getTotalValue()) 

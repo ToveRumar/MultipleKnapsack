@@ -16,4 +16,4 @@ class Item:
         return self.value/self.weight
 
     def __repr__(self):
-        return "Item weight " + str(self.weight)+ "\n Item value " + str(self.value) + "\nRelative benefit " + str(self.getRelativeBenefit()) + "\n"
+        return "Item weight: " + str(self.weight)+ " Item value: " + str(self.value) + " Relative benefit: " + str(self.getRelativeBenefit()) + "\n"
