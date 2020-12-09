@@ -1,4 +1,4 @@
-
+from __future__ import division
 
 class Item:
 
@@ -10,4 +10,7 @@ class Item:
         return self.weight
 
     def getValue(self):
-        return self.velue
+        return self.value
+
+    def getRelativeBenefit(self):
+        return self.value/self.weight
