@@ -36,6 +36,8 @@ class Knapsack:
             self.content.append(item)
             self.spaceLeft=self.maxWeight-self.getTotalWeight()
             return True
+    def clear(self):
+        self.content.clear()
     
     def __repr__(self):
         return "My maxWeight is " + str(self.maxWeight) + "\nI have "+ str(self.spaceLeft)+" Space left \nI hold the following items:\n" + str(self.content) +"\n my total value is " + str(self.getTotalValue()) + "\n"

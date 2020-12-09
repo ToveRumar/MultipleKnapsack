@@ -37,8 +37,19 @@ def greedyRandom():
         if putItemInRandomKnapsack(item):
             sortedItems.remove(item)
 
+def clearAllKnapsacks():
+    for kanpsack in allKnapsacks:
+        knapsack.clear()
 
+        
 greedyRandom()
+for knapsack in allKnapsacks:
+    print(knapsack)
+    print("-----------------------------------")
+
+clearAllKnapsacks()
+greedyLeastSpace()
+
 for knapsack in allKnapsacks:
     print(knapsack)
     print("-----------------------------------")
