@@ -6,9 +6,13 @@ allItems=[Item(1,3),Item(2,4),Item(3,1), Item(4,2), Item(1, 2), Item(3, 3), Item
 allKnapsacks=[Knapsack(6),Knapsack(8),Knapsack(5)]
 
 
-#Returns list of items soted by benefit in descending order
+#Returns list of items sorted by benefit in descending order
 def sortItemsByBenefit():                                                            
     allItems.sort(key=Item.getRelativeBenefit,reverse=True) 
+
+#Returns list of items sorted by weight in descending order
+def sortItemsByWeight():                                                            
+    allItems.sort(key=Item.getWeight,reverse=True)
 
 #Returns list of knapsacks soted by Capacity in ascending order
 def sortKnapsacksByCapacity(knapsacks):
@@ -64,16 +68,35 @@ def printTestCase():
     print("Test knapsacks: "+str(allKnapsacks))
     print("============================================")
 
-def neighborhoodSearch(allKnapsacks, allItems):
-    
+def neighborhoodSearch(allKnapsacks, allItems,depth):
+    sortItemsByWeight()
     bestNeighbor = findBestNeighbor(allKnapsacks, allItems)
-    if bestNeighbor[0] > valueOfAllKnapsacks(allKnapsacks):
-        if len(bestNeighbor) == 3:
+   
+    if bestNeighbor[0] >= valueOfAllKnapsacks(allKnapsacks) and depth is not 0:
+
+        if len(bestNeighbor) == 1:
+            print("Result of neighborhood search")
+            printState()   
+        elif len(bestNeighbor) == 3:
             bestNeighbor[2].putItem(bestNeighbor[1])
-            neighborhoodSearch(allKnapsacks,allItems)
+            print("Value after puttting item:" +  str(valueOfAllKnapsacks(allKnapsacks)))
+            neighborhoodSearch(allKnapsacks,allItems,depth-1)
         elif len(bestNeighbor) == 4:
-            allItems.append(bestNeighbor[2].removeItem())
+           
+            itemToPile=bestNeighbor[2].removeItem(bestNeighbor[3])
+            allItems.append(itemToPile)
+            allItems.remove(bestNeighbor[1])
             bestNeighbor[2].putItem(bestNeighbor[1])
+            print("value afterswapping with pile: "+ str(valueOfAllKnapsacks(allKnapsacks)))
+            neighborhoodSearch(allKnapsacks,allItems,depth-1)
+        elif len(bestNeighbor) == 5:
+            
+            otherItem = bestNeighbor[4].removeItem(bestNeighbor[1])
+            ourItem = bestNeighbor[2].removeItem(bestNeighbor[3])
+            bestNeighbor[2].putItem(otherItem)
+            bestNeighbor[4].putItem(ourItem)
+            print("value afterswapping with other knapsack: "+ str(valueOfAllKnapsacks(allKnapsacks)))
+            neighborhoodSearch(allKnapsacks,allItems,depth-1)
     else:
         print("Result of neighborhood search")
         printState()
@@ -91,13 +114,25 @@ def findBestNeighbor(allKnapsacks, allItems):
                 if totalChildValue > bestNeighbor[0]:
                     bestNeighbor = [totalChildValue, item, knapsack]
             for knapItem in knapsack.getContent():
-                if (item.getValue() > knapItem.getValue()) and (item.getWeight() < (knapsack.getCapacity() - knapItem.getWeight())): 
+                if (item.getValue() > knapItem.getValue()) and (item.getWeight() <= (knapsack.getCapacity() + knapItem.getWeight())): 
+                    #print("Creatin suggestion for swap with pile")
                     #checks if item from pile has a higher value than the item in our knapsack, and if the item can fit in the knapsack
                     totalChildValue = valueOfAllKnapsacks(allKnapsacks) - knapItem.getValue() + item.getValue()
                     if totalChildValue > bestNeighbor[0]:
+                        #print("Creatin suggestion for swap with pile")
                         bestNeighbor = [totalChildValue, item, knapsack, knapItem]
+        for otherKnapsack in allKnapsacks:
+            if otherKnapsack is not knapsack:
+                for ourItem in knapsack.getContent():
+                    for otherItem in otherKnapsack.getContent():
+                        if ourItem.getWeight() > otherItem.getWeight() and (ourItem.getWeight()<=(otherKnapsack.getCapacity()+ otherItem.getWeight())):
+                        
+                            bestNeighbor = [valueOfAllKnapsacks(allKnapsacks), otherItem, knapsack, ourItem, otherKnapsack]                            
+                            #print("Creating suggestion for swap")
+        
     return bestNeighbor
                 
+
 
 def valueOfAllKnapsacks(allKnapsacks):
     knapValue = 0
@@ -110,7 +145,7 @@ printTestCase()
 greedyLeastSpace()
 #greedyRandom()
 printState()
-neighborhoodSearch(allKnapsacks,allItems)
+neighborhoodSearch(allKnapsacks,allItems,100)
 
 #clearAllKnapsacks()
 

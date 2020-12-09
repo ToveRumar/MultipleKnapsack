@@ -31,6 +31,7 @@ class Knapsack:
 
     def putItem(self,item):
         if item.getWeight()>self.Capacity:
+          
             return False
         else:
             self.content.append(item)
@@ -40,7 +41,9 @@ class Knapsack:
         self.content.clear()
     
     def removeItem(self, item):
+        
         self.content.remove(item)
+        self.Capacity+=item.getWeight()
         return item
 
     def __repr__(self):
