@@ -2,8 +2,9 @@ from Knapsack import Knapsack
 from Item import Item
 import random
 #Main program
-allItems=[Item(1,3),Item(2,4),Item(3,1), Item(4,2), Item(1, 2), Item(3, 3), Item(2,3),Item(2,3),Item(5,6), Item(4,3), Item(2, 2), Item(4, 6)]
-allKnapsacks=[Knapsack(6),Knapsack(8),Knapsack(5)]
+#allItems=[Item(1,3),Item(2,4),Item(3,1), Item(4,2), Item(1, 2), Item(3, 3), Item(2,3),Item(2,3),Item(5,6), Item(4,3), Item(2, 2), Item(4, 6)]
+allItems=[Item(5,4),Item(2,5),Item(1,5), Item(3,3), Item(3,2), Item(1,4), Item(4,1),Item(1,1),Item(1,2), Item(3,2), Item(2, 2), Item(4, 6), Item(4,4)]
+allKnapsacks=[Knapsack(6),Knapsack(8),Knapsack(5),Knapsack(10)]
 
 
 #Returns list of items sorted by benefit in descending order
@@ -19,8 +20,11 @@ def sortKnapsacksByCapacity(knapsacks):
     return sorted(knapsacks, key=Knapsack.getCapacity) 
 
 def putItemInKnapsackLeastSpace(item):
-    knapsacks=sortKnapsacksByCapacity(allKnapsacks)
-    return knapsacks[0].putItem(item)
+    for knapsack in allKnapsacks:
+        if (knapsack.putItem(item)):
+            return True
+
+    return False
 
 def putItemInRandomKnapsack(item):
     knapsack=random.choice(allKnapsacks)
@@ -30,6 +34,7 @@ def putItemInRandomKnapsack(item):
 def greedyLeastSpace():
     print("Result of least space greedy search")
     sortItemsByBenefit()
+    sortKnapsacksByCapacity(allKnapsacks)
     #allItems = list(sortedItems)
     for item in allItems:
         if putItemInKnapsackLeastSpace(item):
@@ -142,8 +147,8 @@ def valueOfAllKnapsacks(allKnapsacks):
 
 
 printTestCase()
-greedyLeastSpace()
-#greedyRandom()
+#greedyLeastSpace()
+greedyRandom()
 printState()
 neighborhoodSearch(allKnapsacks,allItems,100)
 
