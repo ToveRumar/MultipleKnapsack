@@ -3,8 +3,12 @@ from Item import Item
 import random
 #Main program
 #allItems=[Item(1,3),Item(2,4),Item(3,1), Item(4,2), Item(1, 2), Item(3, 3), Item(2,3),Item(2,3),Item(5,6), Item(4,3), Item(2, 2), Item(4, 6)]
-allItems=[Item(5,4),Item(2,5),Item(1,5), Item(3,3), Item(3,2), Item(1,4), Item(4,1),Item(1,1),Item(1,2), Item(3,2), Item(2, 2), Item(4, 6), Item(4,4)]
-allKnapsacks=[Knapsack(6),Knapsack(8),Knapsack(5),Knapsack(10)]
+#allItems=[Item(5,4),Item(2,5),Item(1,5), Item(3,3), Item(3,2), Item(1,4), Item(4,1),Item(1,1),Item(1,2), Item(3,2), Item(2, 2), Item(4, 6), Item(4,4)]
+allItems=[Item(6,15),Item(3,7),Item(7,10), Item(5,5), Item(3,1), Item(1,4), Item(6,8),Item(1,1),Item(4,4), Item(5,2), Item(3,3), Item(4, 6), Item(2,1)]
+
+allKnapsacks=[Knapsack(6),Knapsack(8),Knapsack(5)]
+#allKnapsacks=[Knapsack(20),Knapsack(10),Knapsack(15)]
+#allKnapsacks=[Knapsack(6),Knapsack(8),Knapsack(5),Knapsack(10)]
 
 
 #Returns list of items sorted by benefit in descending order
@@ -20,10 +24,12 @@ def sortKnapsacksByCapacity(knapsacks):
     return sorted(knapsacks, key=Knapsack.getCapacity) 
 
 def putItemInKnapsackLeastSpace(item):
+   
     for knapsack in allKnapsacks:
         if (knapsack.putItem(item)):
+            
             return True
-
+  
     return False
 
 def putItemInRandomKnapsack(item):
@@ -36,20 +42,27 @@ def greedyLeastSpace():
     sortItemsByBenefit()
     sortKnapsacksByCapacity(allKnapsacks)
     #allItems = list(sortedItems)
+    itemsToRemove=[]
     for item in allItems:
+        
         if putItemInKnapsackLeastSpace(item):
-            allItems.remove(item)
-            #print(str(item))
+            itemsToRemove.append(item)
+    for item in itemsToRemove:
+        allItems.remove(item)
+           
 
 def greedyRandom():
     
     print("Result of random greedy search")
     sortItemsByBenefit()
    
-    
+    itemsToRemove=[]
     for item in allItems:
         if putItemInRandomKnapsack(item):
-            allItems.remove(item)
+            #allItems.remove(item)
+            itemsToRemove.append(item)
+    for item in itemsToRemove:
+        allItems.remove(item)
     
 
 
@@ -74,10 +87,11 @@ def printTestCase():
     print("============================================")
 
 def neighborhoodSearch(allKnapsacks, allItems,depth):
+    
     sortItemsByWeight()
     bestNeighbor = findBestNeighbor(allKnapsacks, allItems)
-   
-    if bestNeighbor[0] >= valueOfAllKnapsacks(allKnapsacks) and depth is not 0:
+    
+    if bestNeighbor[0] >= valueOfAllKnapsacks(allKnapsacks) and depth != 0:
 
         if len(bestNeighbor) == 1:
             print("Result of neighborhood search")
@@ -127,6 +141,7 @@ def findBestNeighbor(allKnapsacks, allItems):
                         #print("Creatin suggestion for swap with pile")
                         bestNeighbor = [totalChildValue, item, knapsack, knapItem]
         for otherKnapsack in allKnapsacks:
+           
             if otherKnapsack is not knapsack:
                 for ourItem in knapsack.getContent():
                     for otherItem in otherKnapsack.getContent():
@@ -148,6 +163,7 @@ def valueOfAllKnapsacks(allKnapsacks):
 
 printTestCase()
 #greedyLeastSpace()
+
 greedyRandom()
 printState()
 neighborhoodSearch(allKnapsacks,allItems,100)
