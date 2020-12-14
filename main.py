@@ -26,44 +26,25 @@ def sortKnapsacksByCapacity(knapsacks):
 def putItemInKnapsackLeastSpace(item):
    
     for knapsack in allKnapsacks:
-        if (knapsack.putItem(item)):
-            
+        if (knapsack.putItem(item)): 
             return True
-  
     return False
 
 def putItemInRandomKnapsack(item):
     knapsack=random.choice(allKnapsacks)
     return knapsack.putItem(item)
     
-
-def greedyLeastSpace():
-    print("Result of least space greedy search")
-    sortItemsByBenefit()
-    sortKnapsacksByCapacity(allKnapsacks)
-    #allItems = list(sortedItems)
-    itemsToRemove=[]
-    for item in allItems:
-        
-        if putItemInKnapsackLeastSpace(item):
-            itemsToRemove.append(item)
-    for item in itemsToRemove:
-        allItems.remove(item)
            
 
 def greedyRandom():
-    
     print("Result of random greedy search")
     sortItemsByBenefit()
-   
     itemsToRemove=[]
-    for item in allItems:
+    for item in allItems[:]:
+
         if putItemInRandomKnapsack(item):
-            #allItems.remove(item)
-            itemsToRemove.append(item)
-    for item in itemsToRemove:
-        allItems.remove(item)
-    
+            allItems.remove(item)
+ 
 
 
 def clearAllKnapsacks():
@@ -126,33 +107,27 @@ def neighborhoodSearch(allKnapsacks, allItems,depth):
 
 def findBestNeighbor(allKnapsacks, allItems):
     bestNeighbor = [0]
-    for knapsack in allKnapsacks:
+    for knapsack in allKnapsacks:                                                                   #Create all possible ways to put an item from the pile into a knapsack
         for item in allItems:
             if knapsack.getCapacity() >= item.getWeight():
                 totalChildValue = valueOfAllKnapsacks(allKnapsacks) + item.getValue()
                 if totalChildValue > bestNeighbor[0]:
                     bestNeighbor = [totalChildValue, item, knapsack]
-            for knapItem in knapsack.getContent():
+            for knapItem in knapsack.getContent():                                                  #Create all possible ways to swap with pile
                 if (item.getValue() > knapItem.getValue()) and (item.getWeight() <= (knapsack.getCapacity() + knapItem.getWeight())): 
-                    #print("Creatin suggestion for swap with pile")
-                    #checks if item from pile has a higher value than the item in our knapsack, and if the item can fit in the knapsack
+                  
                     totalChildValue = valueOfAllKnapsacks(allKnapsacks) - knapItem.getValue() + item.getValue()
                     if totalChildValue > bestNeighbor[0]:
-                        #print("Creatin suggestion for swap with pile")
                         bestNeighbor = [totalChildValue, item, knapsack, knapItem]
-        for otherKnapsack in allKnapsacks:
-           
+        for otherKnapsack in allKnapsacks:                                                          #Create all possible ways to swap with other knapscack
             if otherKnapsack is not knapsack:
                 for ourItem in knapsack.getContent():
                     for otherItem in otherKnapsack.getContent():
                         if ourItem.getWeight() > otherItem.getWeight() and (ourItem.getWeight()<=(otherKnapsack.getCapacity()+ otherItem.getWeight())):
-                        
                             bestNeighbor = [valueOfAllKnapsacks(allKnapsacks), otherItem, knapsack, ourItem, otherKnapsack]                            
                             #print("Creating suggestion for swap")
         
     return bestNeighbor
-                
-
 
 def valueOfAllKnapsacks(allKnapsacks):
     knapValue = 0
@@ -162,13 +137,10 @@ def valueOfAllKnapsacks(allKnapsacks):
 
 
 printTestCase()
-#greedyLeastSpace()
-
 greedyRandom()
 printState()
 neighborhoodSearch(allKnapsacks,allItems,100)
 
-#clearAllKnapsacks()
 
 
 
